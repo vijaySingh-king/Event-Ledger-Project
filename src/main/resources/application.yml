@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: event-gateway
+  jackson:
+    serialization: 
+      write-dates-as-timestamps: false
+
+# When running in Docker, this MUST match the service name in docker-compose.yml
+account:
+  service:
+    url: http://account-service:8081
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      accountService:
+        sliding-window-size: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 2
+        automatic-transition-from-open-to-half-open-enabled: true
